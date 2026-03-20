@@ -1,0 +1,46 @@
+[project]
+name = "italian-tech-salaries-analysis"
+version = "0.1.0"
+description = "Analisi statistica dei salari nel settore tech italiano"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Andrea Cadeddu"},
+]
+keywords = ["data-analysis", "salaries", "statistics", "italy", "tech"]
+dependencies = [
+    "datasets>=4.6.1",
+    "ipykernel>=7.2.0",
+    "matplotlib>=3.10.8",
+    "numpy>=2.2.6",
+    "pandas>=2.3.3",
+    "scipy>=1.15.3",
+    "seaborn>=0.13.2",
+    "statsmodels>=0.14.6",
+]
+
+[tool.ruff]
+line-length = 99
+src = ["src"]
+include = ["pyproject.toml", "src/**/*.py", "tests/**/*.py", "scripts/**/*.py"]
+
+[tool.ruff.lint]
+extend-select = ["I"]
+select = ["E", "F", "W", "I", "UP"]
+ignore = []
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+force-sort-within-sections = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]

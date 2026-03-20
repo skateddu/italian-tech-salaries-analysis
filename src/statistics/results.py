@@ -1,0 +1,93 @@
+"""Dataclasses for presenting statistical test results."""
+
+from dataclasses import dataclass, field
+
+
+@dataclass
+class TTestResult:
+    """Container for t-test results."""
+
+    label_group1: str
+    label_group2: str
+    mean_group1: float
+    mean_group2: float
+    n_group1: int
+    n_group2: int
+    t_statistic: float
+    p_value: float
+    cohens_d: float
+    is_significant: bool
+
+    def print_report(self) -> None:
+        """Print a formatted summary of the t-test."""
+
+        template=f"""Test t - {self.label_group1} vs {self.label_group2}
+        Media ${self.label_group1}: €{self.mean_group1:.2f} | Media {self.label_group2}: €{self.mean_group2:.2f}
+        t-statistic: {self.t_statistic:.2f}, P-value: {self.p_value:.2e}
+        Effect size (Cohen's d): {self.cohens_d:.2f}"""
+        print(template)
+
+
+@dataclass
+class AnovaResult:
+    """Container for one-way ANOVA or Kruskal-Wallis results."""
+
+    label: str
+    statistic: float
+    p_value: float
+    is_significant: bool
+    is_non_parametric: bool = False
+
+    def print_report(self) -> None:
+        """Print a formatted summary of the ANOVA / Kruskal-Wallis test."""
+        test_name = "Kruskal-Wallis" if self.is_non_parametric else "ANOVA"
+        stat_name = "H-statistic" if self.is_non_parametric else "F-statistic"
+
+        template = f"""{test_name} - {self.label}
+        {stat_name}: {self.statistic:.2f}
+        P-value: {self.p_value:.2e}
+        Differenze significative (α=0.05): {self.is_significant}"""
+        print(template)
+
+
+@dataclass
+class Chi2Result:
+    """Container for chi-square test results."""
+
+    label: str
+    chi2: float
+    p_value: float
+    dof: int
+    is_significant: bool
+
+    def print_report(self) -> None:
+        """Print a formatted summary of the chi-square test."""
+
+        template = f"""Chi² - {self.label}
+        Chi² = {self.chi2:.2f}, P-value = {self.p_value:.2e}, df = {self.dof}
+        Associazione significativa: {self.is_significant}"""
+        print(template)
+
+
+@dataclass
+class AssumptionResult:
+    """Container for ANOVA assumption verification results."""
+
+    label: str
+    normality_tests: list[dict] = field(default_factory=list)
+    levene_statistic: float = 0.0
+    levene_p_value: float = 0.0
+    is_homoscedastic: bool = False
+    recommendation: str = ""
+
+    def print_report(self) -> None:
+        """Print a formatted summary of assumption checks."""
+        print(f"Verifica assunzioni - {self.label}")
+        print("Normalità (Shapiro-Wilk, α=0.05):")
+        for test in self.normality_tests:
+            status = "normale" if test["is_normal"] else "non normale"
+            print(f"  {test['group']} (n={test['n']}): W={test['statistic']:.4f}, p={test['p_value']:.2e} - {status}")
+        status = "omogenee" if self.is_homoscedastic else "non omogenee"
+        print("Omoschedasticità (Levene, α=0.05):")
+        print(f"  F={self.levene_statistic:.2f}, p={self.levene_p_value:.2e} - varianze {status}")
+        print(f"Raccomandazione: {self.recommendation}")
