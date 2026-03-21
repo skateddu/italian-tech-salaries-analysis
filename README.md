@@ -34,28 +34,6 @@ L'analisi segue uno schema consolidato per ogni sezione: *cosa si analizza*, *pe
 | **Regressione OLS** | Effetto netto di ciascun fattore, controllando per gli altri |
 | **Shapiro-Wilk / Levene** | Verifica assunzioni ANOVA (normalita, omoschedasticita) |
 
-## Quick Start
-
-Requisiti: **Python >= 3.10**, [uv](https://docs.astral.sh/uv/)
-
-### Installazione
-
-```bash
-git clone https://github.com/skateddu/italian-tech-salaries-analysis.git
-cd italian-tech-salaries-analysis
-uv sync
-```
-
-### Utilizzo
-
-Aprire `data_analysis.ipynb` in Jupyter o VS Code. Il dataset viene scaricato automaticamente da HuggingFace al primo avvio.
-
-### Test
-
-```bash
-uv run pytest tests/ -v
-```
-
 ## Struttura del Progetto
 
 ```text
@@ -98,3 +76,25 @@ italian-tech-salaries-analysis/
 | [Matplotlib](https://matplotlib.org/) | Grafici e visualizzazione dati | [Docs](https://matplotlib.org/stable/contents.html) |
 | [seaborn](https://seaborn.pydata.org/) | Visualizzazione statistica (boxplot, heatmap, histplot) | [Docs](https://seaborn.pydata.org/api.html) |
 | [datasets](https://huggingface.co/docs/datasets/) | Caricamento dataset da HuggingFace Hub | [Docs](https://huggingface.co/docs/datasets/) |
+
+## Quick Start
+
+Requisiti: **Python >= 3.10**, [uv](https://docs.astral.sh/uv/)
+
+### Installazione
+
+```bash
+git clone https://github.com/skateddu/italian-tech-salaries-analysis.git
+cd italian-tech-salaries-analysis
+uv sync
+```
+
+### Utilizzo
+
+Aprire `data_analysis.ipynb` in Jupyter o VS Code. Il dataset viene scaricato automaticamente da HuggingFace al primo avvio.
+
+### Test
+
+```bash
+uv run pytest tests/ -v
+```
