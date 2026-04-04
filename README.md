@@ -1,5 +1,12 @@
 # Italian Tech Salaries Analysis
 
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Dataset: HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97-datapizza--ai--lab%2Fsalaries-yellow)](https://huggingface.co/datasets/datapizza-ai-lab/salaries)
+[![Jupyter Notebook](https://img.shields.io/badge/jupyter-notebook-F37626?logo=jupyter&logoColor=white)](data_analysis.ipynb)
+
 > Analisi statistica dei salari nel settore tech italiano, basata sul dataset [datapizza-ai-lab/salaries](https://huggingface.co/datasets/datapizza-ai-lab/salaries) di HuggingFace.
 
 ---
