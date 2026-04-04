@@ -6,9 +6,21 @@ readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
 authors = [
-    {name = "Andrea Cadeddu"},
+    { name = "Andrea Cadeddu", email = "skateddu@users.noreply.github.com" },
 ]
 keywords = ["data-analysis", "salaries", "statistics", "italy", "tech"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "datasets>=4.6.1",
     "ipykernel>=7.2.0",
