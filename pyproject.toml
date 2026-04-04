@@ -20,6 +20,11 @@ dependencies = [
     "statsmodels>=0.14.6",
 ]
 
+[project.urls]
+Homepage = "https://github.com/skateddu/italian-tech-salaries-analysis"
+Repository = "https://github.com/skateddu/italian-tech-salaries-analysis"
+Issues = "https://github.com/skateddu/italian-tech-salaries-analysis/issues"
+
 [tool.ruff]
 line-length = 99
 src = ["src"]
