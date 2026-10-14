@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from src.data.features import (
+from salaries_analysis.data.features import (
     EXPERIENCE_JUNIOR_THRESHOLD,
     EXPERIENCE_MIDDLE_THRESHOLD,
     feature_engineering,

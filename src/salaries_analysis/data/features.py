@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from src.data.geo_mapper import PROVINCE_MAPPER, REGIONS_MAPPER
+from salaries_analysis.data.geo_mapper import PROVINCE_MAPPER, REGIONS_MAPPER
 
 EXPERIENCE_JUNIOR_THRESHOLD = 2
 EXPERIENCE_MIDDLE_THRESHOLD = 5

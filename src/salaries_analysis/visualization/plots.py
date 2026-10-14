@@ -1,8 +1,12 @@
 """Helper functions for common plot patterns."""
 
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+
+STYLE_PATH = Path(__file__).resolve().parent.parent / "config.mplstyle"
 
 
 def plot_salary_boxplot(

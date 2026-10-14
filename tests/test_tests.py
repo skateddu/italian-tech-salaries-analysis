@@ -2,9 +2,16 @@
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 
-from src.statistics.results import AnovaResult, AssumptionResult, Chi2Result, TTestResult
-from src.statistics.tests import (
+from salaries_analysis.statistics.results import (
+    AnovaResult,
+    AssumptionResult,
+    Chi2Result,
+    TTestResult,
+)
+from salaries_analysis.statistics.tests import (
+    adjust_pvalues,
     check_anova_assumptions,
     chi2_test,
     factorial_anova,
@@ -214,3 +221,84 @@ class TestFactorialAnova:
         result = factorial_anova(df, target="salary", factors=["experience", "region"])
         experience_p = result.loc["C(experience)", "PR(>F)"]
         assert experience_p < 0.05
+
+
+class TestWelch:
+    """Tests for the Welch variants of the t-test and one-way ANOVA."""
+
+    @staticmethod
+    def _unequal_groups() -> list[pd.Series]:
+        rng = np.random.default_rng(seed=42)
+        return [
+            pd.Series(rng.normal(loc=50, scale=2, size=200)),
+            pd.Series(rng.normal(loc=48, scale=20, size=20)),
+            pd.Series(rng.normal(loc=52, scale=10, size=60)),
+        ]
+
+    def test_ttest_defaults_to_welch(self) -> None:
+        g1, g2, _ = self._unequal_groups()
+        result = ttest(g1, g2, "A", "B")
+        expected = stats.ttest_ind(g1, g2, equal_var=False)
+        assert np.isclose(result.p_value, expected.pvalue)
+
+    def test_ttest_student_when_equal_var(self) -> None:
+        g1, g2, _ = self._unequal_groups()
+        result = ttest(g1, g2, "A", "B", equal_var=True)
+        expected = stats.ttest_ind(g1, g2, equal_var=True)
+        assert np.isclose(result.p_value, expected.pvalue)
+
+    def test_welch_anova_differs_from_classic(self) -> None:
+        groups = self._unequal_groups()
+        welch = oneway_anova(groups, label="W", equal_var=False)
+        classic = oneway_anova(groups, label="C")
+        assert welch.is_welch
+        assert not classic.is_welch
+        assert not np.isclose(welch.p_value, classic.p_value)
+
+    def test_non_parametric_overrides_welch(self) -> None:
+        groups = self._unequal_groups()
+        result = oneway_anova(groups, label="K", non_parametric=True, equal_var=False)
+        assert result.is_non_parametric
+        assert not result.is_welch
+
+
+class TestAssumptionRecommendation:
+    """Tests for the recommendation text of check_anova_assumptions."""
+
+    def test_names_small_groups(self) -> None:
+        rng = np.random.default_rng(seed=42)
+        groups = [
+            pd.Series(rng.exponential(scale=10, size=500)),
+            pd.Series(rng.exponential(scale=10, size=12)),
+        ]
+        result = check_anova_assumptions(groups=groups, labels=["big", "tiny"], label="Mixed")
+        assert "tiny (n=12)" in result.recommendation
+        assert "big" not in result.recommendation
+
+    def test_large_heteroscedastic_suggests_welch(self) -> None:
+        rng = np.random.default_rng(seed=42)
+        groups = [
+            pd.Series(rng.exponential(scale=1, size=500)),
+            pd.Series(rng.exponential(scale=20, size=500)),
+        ]
+        result = check_anova_assumptions(groups=groups, labels=["A", "B"], label="Hetero")
+        assert "Welch ANOVA" in result.recommendation
+
+
+class TestAdjustPvalues:
+    """Tests for the multiple comparison correction helper."""
+
+    def test_holm_adjustment(self) -> None:
+        result = adjust_pvalues({"a": 0.01, "b": 0.02, "c": 0.04})
+        assert list(result.index) == ["a", "b", "c"]
+        assert np.allclose(result["p_adjusted"], [0.03, 0.04, 0.04])
+        assert result["is_significant"].tolist() == [True, True, True]
+
+    def test_adjustment_can_remove_significance(self) -> None:
+        result = adjust_pvalues({"a": 0.03, "b": 0.04})
+        assert (result["p_value"] < 0.05).all()
+        assert not result["is_significant"].any()
+
+    def test_other_methods_supported(self) -> None:
+        result = adjust_pvalues({"a": 0.01, "b": 0.02}, method="bonferroni")
+        assert np.allclose(result["p_adjusted"], [0.02, 0.04])

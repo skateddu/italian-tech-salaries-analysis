@@ -1,12 +1,14 @@
 """Visualization utilities for salary data analysis."""
 
-from src.visualization.plots import (
+from salaries_analysis.visualization.plots import (
+    STYLE_PATH,
     plot_heatmap,
     plot_horizontal_barplot,
     plot_salary_boxplot,
 )
 
 __all__ = [
+    "STYLE_PATH",
     "plot_heatmap",
     "plot_horizontal_barplot",
     "plot_salary_boxplot",

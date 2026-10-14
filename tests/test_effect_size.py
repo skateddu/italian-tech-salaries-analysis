@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from src.statistics.effect_size import cohens_d
+from salaries_analysis.statistics.effect_size import cohens_d
 
 
 class TestCohensD:
