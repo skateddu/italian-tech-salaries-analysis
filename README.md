@@ -24,49 +24,56 @@ L'analisi segue uno schema consolidato per ogni sezione: *cosa si analizza*, *pe
 
 ## Risultati Principali
 
-- **Esperienza** e il fattore dominante: un senior guadagna oltre il 50% in piu di un junior (Cohen's d = 1.01), con un incremento significativo per ogni anno aggiuntivo
-- **Divario Nord-Sud** confermato: gap di ~7k tra Nord e Sud, che si amplifica con la seniority. Il Centro si posiziona a meta strada
-- **Gender pay gap** reale e strutturale: persiste a ogni livello di esperienza, anche controllando per regione e dimensione aziendale. A questo si aggiunge il fenomeno del *leaky pipeline* (quota femminile in calo ai livelli senior)
-- **Gerarchia dei fattori** (regressione multipla): esperienza > regione > gender > dimensione azienda > work mode. Dimensione aziendale e work mode, spesso sopravvalutati, hanno un impatto modesto
+- **Esperienza** e il fattore dominante: un senior guadagna oltre il 50% in piu di un junior (Cohen's d = 0.96); la regressione stima +3.3% per ogni anno aggiuntivo
+- **Divario Nord-Sud** confermato: gap di ~6.6k tra Nord e Sud. In euro cresce con la seniority, ma in percentuale resta stabile (~17-19% a ogni livello). Il Centro si posiziona a meta strada
+- **Gender pay gap**: 11.5% grezzo, circa 7.9% a parita di esperienza, regione, dimensione aziendale e work mode. Persiste a ogni livello di esperienza anche dopo la correzione per test multipli. A questo si aggiunge il fenomeno del *leaky pipeline* (quota femminile dal 16.5% tra i junior al 9.9% tra i senior)
+- **Regressione multipla su log(salario)**: oltre all'esperienza, le penalita maggiori sono associate al lavoro onsite (-13.5% rispetto all'hybrid) e al Sud (-10% rispetto al Centro); gender e dimensione aziendale valgono circa l'8%. Remote e hybrid sono equivalenti
 
 ## Metodi Statistici Utilizzati
 
 | Test | Scopo |
 |------|-------|
-| **ANOVA / Kruskal-Wallis** | Confronto tra 3+ gruppi (parametrico / non parametrico) |
-| **t-test** | Confronto tra 2 gruppi |
+| **ANOVA / Welch ANOVA / Kruskal-Wallis** | Confronto tra 3+ gruppi (parametrico / varianze diverse / non parametrico) |
+| **Welch t-test** | Confronto tra 2 gruppi senza assumere varianze uguali |
 | **Tukey HSD** | Post-hoc per identificare quali coppie differiscono |
+| **Correzione di Holm** | Controllo dei falsi positivi quando si eseguono piu test sulla stessa domanda |
 | **Cohen's d** | Dimensione dell'effetto (rilevanza pratica) |
 | **Chi Quadro** | Indipendenza tra variabili categoriche |
-| **Regressione OLS** | Effetto netto di ciascun fattore, controllando per gli altri |
+| **Regressione OLS su log(salario)** | Effetto netto percentuale di ciascun fattore, controllando per gli altri |
 | **Shapiro-Wilk / Levene** | Verifica assunzioni ANOVA (normalita, omoschedasticita) |
+
+## Riproducibilita
+
+Il dataset viene aggiornato ogni settimana su HuggingFace. Per rendere i risultati riproducibili, `load_salaries()` carica una revisione fissata (`DATASET_REVISION` in `src/salaries_analysis/data/dataset.py`, export del 2026-10-11 con 26.478 risposte). Per aggiornare l'analisi basta cambiare la revisione e ri-eseguire il notebook; `load_salaries(revision=None)` carica l'ultima versione disponibile.
 
 ## Struttura del Progetto
 
 ```text
 italian-tech-salaries-analysis/
-├── data_analysis.ipynb          # Notebook principale dell'analisi
-├── src/
-│   ├── config.mplstyle          # Stile Matplotlib personalizzato
+├── data_analysis.ipynb              # Notebook principale dell'analisi
+├── src/salaries_analysis/
+│   ├── config.mplstyle              # Stile Matplotlib personalizzato
 │   ├── data/
-│   │   ├── dataset.py           # Caricamento dataset da HuggingFace
-│   │   ├── descriptive.py       # Statistiche descrittive (describe + skew/kurtosis)
-│   │   ├── features.py          # Feature engineering
-│   │   └── geo_mapper.py        # Mappatura province -> regioni -> macro-regioni
+│   │   ├── dataset.py               # Caricamento dataset da HuggingFace (revisione fissata)
+│   │   ├── descriptive.py           # Statistiche descrittive (describe + skew/kurtosis)
+│   │   ├── features.py              # Feature engineering
+│   │   └── geo_mapper.py            # Mappatura province -> regioni -> macro-regioni
 │   ├── statistics/
-│   │   ├── effect_size.py       # Cohen's d
-│   │   ├── results.py           # Dataclass per risultati (ANOVA, Chi2, TTest, AssumptionResult)
-│   │   └── tests.py             # t-test, ANOVA, Kruskal-Wallis, Chi2, verifica assunzioni
+│   │   ├── effect_size.py           # Cohen's d
+│   │   ├── results.py               # Dataclass per risultati (ANOVA, Chi2, TTest, AssumptionResult)
+│   │   └── tests.py                 # Welch t-test, (Welch) ANOVA, Kruskal-Wallis, Chi2, assunzioni, Holm
 │   └── visualization/
-│       └── plots.py             # Barplot, boxplot, heatmap
+│       └── plots.py                 # Barplot, boxplot, heatmap
 ├── tests/
-│   ├── conftest.py              # Fixture condivise (DataFrame, gruppi numerici)
-│   ├── test_descriptive.py      # Test statistiche descrittive
-│   ├── test_effect_size.py      # Test Cohen's d
-│   ├── test_features.py         # Test feature engineering
-│   ├── test_geo_mapper.py       # Test mappatura geografica
-│   ├── test_results.py          # Test dataclass risultati
-│   └── test_tests.py            # Test wrapper test statistici
+│   ├── conftest.py                  # Fixture condivise (DataFrame, gruppi numerici)
+│   ├── test_dataset.py              # Test caricamento dataset
+│   ├── test_descriptive.py          # Test statistiche descrittive
+│   ├── test_effect_size.py          # Test Cohen's d
+│   ├── test_features.py             # Test feature engineering
+│   ├── test_geo_mapper.py           # Test mappatura geografica
+│   ├── test_results.py              # Test dataclass risultati
+│   └── test_tests.py                # Test wrapper test statistici
+├── .github/workflows/ci.yml         # CI: ruff + pytest su Python 3.10-3.13
 ├── pyproject.toml
 ├── uv.lock
 └── LICENSE
@@ -79,7 +86,7 @@ italian-tech-salaries-analysis/
 | [pandas](https://pandas.pydata.org/) | Manipolazione e analisi dati tabulari | [Docs](https://pandas.pydata.org/docs/) |
 | [NumPy](https://numpy.org/) | Array numerici e operazioni matematiche | [Docs](https://numpy.org/doc/stable/) |
 | [SciPy](https://scipy.org/) | Test statistici (t-test, ANOVA, Kruskal-Wallis, Chi Quadro) | [Docs](https://docs.scipy.org/doc/scipy/) |
-| [statsmodels](https://www.statsmodels.org/) | Regressione OLS e ANOVA fattoriale | [Docs](https://www.statsmodels.org/stable/index.html) |
+| [statsmodels](https://www.statsmodels.org/) | Regressione OLS, ANOVA fattoriale, Welch ANOVA e correzione di Holm | [Docs](https://www.statsmodels.org/stable/index.html) |
 | [Matplotlib](https://matplotlib.org/) | Grafici e visualizzazione dati | [Docs](https://matplotlib.org/stable/contents.html) |
 | [seaborn](https://seaborn.pydata.org/) | Visualizzazione statistica (boxplot, heatmap, histplot) | [Docs](https://seaborn.pydata.org/api.html) |
 | [datasets](https://huggingface.co/docs/datasets/) | Caricamento dataset da HuggingFace Hub | [Docs](https://huggingface.co/docs/datasets/) |
