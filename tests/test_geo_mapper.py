@@ -1,6 +1,6 @@
 """Tests for geographic mapping dictionaries."""
 
-from src.data.geo_mapper import PROVINCE_MAPPER, REGIONS_MAPPER
+from salaries_analysis.data.geo_mapper import PROVINCE_MAPPER, REGIONS_MAPPER
 
 EXPECTED_REGIONS = 20
 EXPECTED_PROVINCES = 107

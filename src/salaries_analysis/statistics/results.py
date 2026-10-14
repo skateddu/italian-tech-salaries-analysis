@@ -34,17 +34,23 @@ class TTestResult:
 
 @dataclass
 class AnovaResult:
-    """Container for one-way ANOVA or Kruskal-Wallis results."""
+    """Container for one-way ANOVA, Welch ANOVA or Kruskal-Wallis results."""
 
     label: str
     statistic: float
     p_value: float
     is_significant: bool
     is_non_parametric: bool = False
+    is_welch: bool = False
 
     def print_report(self) -> None:
-        """Print a formatted summary of the ANOVA / Kruskal-Wallis test."""
-        test_name = "Kruskal-Wallis" if self.is_non_parametric else "ANOVA"
+        """Print a formatted summary of the ANOVA / Welch / Kruskal-Wallis test."""
+        if self.is_non_parametric:
+            test_name = "Kruskal-Wallis"
+        elif self.is_welch:
+            test_name = "Welch ANOVA"
+        else:
+            test_name = "ANOVA"
         stat_name = "H-statistic" if self.is_non_parametric else "F-statistic"
 
         template = f"""{test_name} - {self.label}

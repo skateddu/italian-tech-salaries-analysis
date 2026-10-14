@@ -1,13 +1,14 @@
 """Statistical analysis tools for salary data."""
 
-from src.statistics.effect_size import cohens_d
-from src.statistics.results import (
+from salaries_analysis.statistics.effect_size import cohens_d
+from salaries_analysis.statistics.results import (
     AnovaResult,
     AssumptionResult,
     Chi2Result,
     TTestResult,
 )
-from src.statistics.tests import (
+from salaries_analysis.statistics.tests import (
+    adjust_pvalues,
     check_anova_assumptions,
     chi2_test,
     factorial_anova,
@@ -16,6 +17,7 @@ from src.statistics.tests import (
 )
 
 __all__ = [
+    "adjust_pvalues",
     "AnovaResult",
     "AssumptionResult",
     "Chi2Result",

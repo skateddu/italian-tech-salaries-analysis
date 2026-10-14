@@ -1,6 +1,11 @@
 """Tests for statistical result dataclasses."""
 
-from src.statistics.results import AnovaResult, AssumptionResult, Chi2Result, TTestResult
+from salaries_analysis.statistics.results import (
+    AnovaResult,
+    AssumptionResult,
+    Chi2Result,
+    TTestResult,
+)
 
 
 class TestTTestResult:
@@ -53,6 +58,19 @@ class TestAnovaResult:
         captured = capsys.readouterr()
         assert "Kruskal-Wallis" in captured.out
         assert "H-statistic" in captured.out
+
+    def test_print_report_welch(self, capsys: object) -> None:
+        result = AnovaResult(
+            label="Test",
+            statistic=15.0,
+            p_value=0.001,
+            is_significant=True,
+            is_welch=True,
+        )
+        result.print_report()
+        captured = capsys.readouterr()
+        assert "Welch ANOVA" in captured.out
+        assert "F-statistic" in captured.out
 
 
 class TestChi2Result:

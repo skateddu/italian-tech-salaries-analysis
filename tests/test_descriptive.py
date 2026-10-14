@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from src.data.descriptive import describe_complete, describe_groups
+from salaries_analysis.data.descriptive import describe_complete, describe_groups
 
 
 class TestDescribeComplete:
