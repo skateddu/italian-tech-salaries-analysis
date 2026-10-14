@@ -5,6 +5,7 @@
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Dataset: HuggingFace](https://img.shields.io/badge/%F0%9F%A4%97-datapizza--ai--lab%2Fsalaries-yellow)](https://huggingface.co/datasets/datapizza-ai-lab/salaries)
+[![Dataset revision](https://img.shields.io/badge/dataset%20revision-52ad2e7%20(2026--10--11)-yellow)](https://huggingface.co/datasets/datapizza-ai-lab/salaries/tree/52ad2e7107a0c51d224ff272475b7b650daabc88)
 [![Jupyter Notebook](https://img.shields.io/badge/jupyter-notebook-F37626?logo=jupyter&logoColor=white)](data_analysis.ipynb)
 
 > Analisi statistica dei salari nel settore tech italiano, basata sul dataset [datapizza-ai-lab/salaries](https://huggingface.co/datasets/datapizza-ai-lab/salaries) di HuggingFace.
@@ -46,7 +47,22 @@ L'analisi segue uno schema consolidato per ogni sezione: *cosa si analizza*, *pe
 
 ## Riproducibilita
 
-Il dataset viene aggiornato ogni settimana su HuggingFace. Per rendere i risultati riproducibili, `load_salaries()` carica una revisione fissata (`DATASET_REVISION` in `src/salaries_analysis/data/dataset.py`, export del 2026-10-11 con 26.478 risposte). Per aggiornare l'analisi basta cambiare la revisione e ri-eseguire il notebook; `load_salaries(revision=None)` carica l'ultima versione disponibile.
+Il dataset viene aggiornato ogni settimana su HuggingFace, quindi caricando sempre l'ultima versione i numeri cambierebbero nel tempo. Per questo `load_salaries()` carica una **revisione fissata** del dataset, e tutti i risultati del notebook e di questo README si riferiscono a quella:
+
+| | |
+|---|---|
+| **Revisione** | [`52ad2e7`](https://huggingface.co/datasets/datapizza-ai-lab/salaries/tree/52ad2e7107a0c51d224ff272475b7b650daabc88) |
+| **Export** | 2026-10-11 (weekly export) |
+| **Risposte** | 26.478 |
+| **Definita in** | `DATASET_REVISION` in [`src/salaries_analysis/data/dataset.py`](src/salaries_analysis/data/dataset.py) |
+
+Per aggiornare l'analisi a una versione piu recente:
+
+1. Scegliere un commit dalla [cronologia del dataset](https://huggingface.co/datasets/datapizza-ai-lab/salaries/commits/main)
+2. Aggiornare `DATASET_REVISION` (e il commento con data e numero di risposte)
+3. Ri-eseguire il notebook e aggiornare i numeri citati nei testi, nel README e la tabella qui sopra
+
+Per un'esplorazione veloce sull'ultima versione disponibile, senza toccare la revisione fissata: `load_salaries(revision=None)`.
 
 ## Struttura del Progetto
 
@@ -107,7 +123,7 @@ uv sync
 
 ### Utilizzo
 
-Aprire `data_analysis.ipynb` in Jupyter o VS Code. Il dataset viene scaricato automaticamente da HuggingFace al primo avvio.
+Aprire `data_analysis.ipynb` in Jupyter o VS Code. Il dataset viene scaricato automaticamente da HuggingFace al primo avvio, nella revisione fissata (vedi [Riproducibilita](#riproducibilita)).
 
 ### Test
 
