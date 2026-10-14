@@ -3,6 +3,7 @@
 from src.data.geo_mapper import PROVINCE_MAPPER, REGIONS_MAPPER
 
 EXPECTED_REGIONS = 20
+EXPECTED_PROVINCES = 107
 EXPECTED_MACRO_REGIONS = {"Nord", "Centro", "Sud"}
 
 
@@ -34,6 +35,12 @@ class TestProvinceMapper:
             assert region in REGIONS_MAPPER, (
                 f"Province '{province}' maps to unknown region '{region}'"
             )
+
+    def test_all_107_provinces_present(self) -> None:
+        assert len(PROVINCE_MAPPER) == EXPECTED_PROVINCES
+
+    def test_every_region_has_a_province(self) -> None:
+        assert set(PROVINCE_MAPPER.values()) == set(REGIONS_MAPPER)
 
     def test_major_cities_present(self) -> None:
         expected = ["Milano", "Roma", "Napoli", "Torino", "Firenze", "Bologna", "Bari"]
