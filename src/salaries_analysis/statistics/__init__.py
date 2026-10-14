@@ -1,6 +1,6 @@
 """Statistical analysis tools for salary data."""
 
-from salaries_analysis.statistics.effect_size import cohens_d
+from salaries_analysis.statistics.effect_size import cohens_d, partial_eta_squared
 from salaries_analysis.statistics.results import (
     AnovaResult,
     AssumptionResult,
@@ -12,6 +12,7 @@ from salaries_analysis.statistics.tests import (
     check_anova_assumptions,
     chi2_test,
     factorial_anova,
+    games_howell,
     oneway_anova,
     ttest,
 )
@@ -26,6 +27,8 @@ __all__ = [
     "chi2_test",
     "cohens_d",
     "factorial_anova",
+    "games_howell",
     "oneway_anova",
+    "partial_eta_squared",
     "ttest",
 ]

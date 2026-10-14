@@ -15,6 +15,7 @@ from salaries_analysis.statistics.tests import (
     check_anova_assumptions,
     chi2_test,
     factorial_anova,
+    games_howell,
     oneway_anova,
     ttest,
 )
@@ -302,3 +303,38 @@ class TestAdjustPvalues:
     def test_other_methods_supported(self) -> None:
         result = adjust_pvalues({"a": 0.01, "b": 0.02}, method="bonferroni")
         assert np.allclose(result["p_adjusted"], [0.02, 0.04])
+
+
+class TestGamesHowell:
+    """Tests for the Games-Howell post-hoc test."""
+
+    @staticmethod
+    def _groups() -> list[pd.Series]:
+        rng = np.random.default_rng(seed=0)
+        return [
+            pd.Series(rng.normal(loc=50, scale=2, size=200)),
+            pd.Series(rng.normal(loc=48, scale=20, size=20)),
+            pd.Series(rng.normal(loc=52, scale=10, size=60)),
+        ]
+
+    def test_one_row_per_pair(self) -> None:
+        result = games_howell(self._groups(), labels=["a", "b", "c"])
+        assert len(result) == 3
+        assert list(zip(result["group1"], result["group2"])) == [
+            ("a", "b"),
+            ("a", "c"),
+            ("b", "c"),
+        ]
+
+    def test_matches_reference_implementation(self) -> None:
+        # Reference values from pingouin.pairwise_gameshowell on the same data.
+        result = games_howell(self._groups(), labels=["a", "b", "c"])
+        assert np.allclose(result["se"], [5.184714, 1.498983, 5.393614], atol=1e-6)
+        assert np.allclose(result["dof"], [19.026278, 59.986212, 22.233746], atol=1e-6)
+        assert np.allclose(result["p_value"], [0.999456, 0.927484, 0.997100], atol=1e-6)
+
+    def test_detects_clear_difference(self, three_groups: list[pd.Series]) -> None:
+        result = games_howell(three_groups, labels=["low", "mid", "high"])
+        assert result["is_significant"].all()
+        assert (result["ci_lower"] <= result["mean_diff"]).all()
+        assert (result["mean_diff"] <= result["ci_upper"]).all()
