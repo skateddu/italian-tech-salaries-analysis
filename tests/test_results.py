@@ -110,3 +110,18 @@ class TestAssumptionResult:
         assert "normale" in captured.out
         assert "non normale" in captured.out
         assert "omogenee" in captured.out
+
+
+class TestStrRepresentation:
+    """Tests for the plain-text representation of results."""
+
+    def test_str_has_no_leading_indentation(self) -> None:
+        result = Chi2Result(label="X", chi2=10.0, p_value=0.01, dof=2, is_significant=True)
+        lines = str(result).splitlines()
+        assert lines[0] == "Chi² - X"
+        assert all(not line.startswith(" ") for line in lines)
+
+    def test_print_report_matches_str(self, capsys: object) -> None:
+        result = AnovaResult(label="Y", statistic=3.0, p_value=0.05, is_significant=False)
+        result.print_report()
+        assert capsys.readouterr().out == str(result) + "\n"

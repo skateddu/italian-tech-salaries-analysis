@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from matplotlib.axes import Axes
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -19,7 +20,8 @@ def plot_salary_boxplot(
     order: list[str] | None = None,
     ylim: tuple[int, int] | None = (0, 120_000),
     figsize: tuple[int, int] = (10, 5),
-) -> None:
+    ax: Axes | None = None,
+) -> Axes:
     """Draw a boxplot of salary by a categorical variable.
 
     Parameters
@@ -41,17 +43,24 @@ def plot_salary_boxplot(
     ylim : tuple[int, int] or None
         Y-axis limits.
     figsize : tuple[int, int]
-        Figure size (width, height).
+        Figure size (width, height), used only when ``ax`` is None.
+    ax : Axes or None
+        Axes to draw on. If None, a new figure is created.
+
+    Returns
+    -------
+    Axes
+        The Axes with the plot.
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    if ax is None:
+        _, ax = plt.subplots(figsize=figsize, layout="tight")
     sns.boxplot(data=data, x=x, y=y, order=order, ax=ax)
     ax.set_title(title)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     if ylim is not None:
         ax.set_ylim(*ylim)
-    plt.tight_layout()
-    plt.show()
+    return ax
 
 
 def plot_heatmap(
@@ -62,7 +71,8 @@ def plot_heatmap(
     fmt: str = ",.0f",
     cmap: str = "YlOrRd",
     figsize: tuple[int, int] = (10, 5),
-) -> None:
+    ax: Axes | None = None,
+) -> Axes:
     """Draw an annotated heatmap.
 
     Parameters
@@ -80,15 +90,22 @@ def plot_heatmap(
     cmap : str
         Colormap name.
     figsize : tuple[int, int]
-        Figure size (width, height).
+        Figure size (width, height), used only when ``ax`` is None.
+    ax : Axes or None
+        Axes to draw on. If None, a new figure is created.
+
+    Returns
+    -------
+    Axes
+        The Axes with the plot.
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    if ax is None:
+        _, ax = plt.subplots(figsize=figsize, layout="tight")
     sns.heatmap(data, annot=True, fmt=fmt, linewidths=1, cmap=cmap, ax=ax)
     ax.set_title(title)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
-    plt.tight_layout()
-    plt.show()
+    return ax
 
 
 def plot_horizontal_barplot(
@@ -99,7 +116,8 @@ def plot_horizontal_barplot(
     xlabel: str = "",
     ylabel: str = "",
     figsize: tuple[int, int] = (10, 5),
-) -> None:
+    ax: Axes | None = None,
+) -> Axes:
     """Draw a horizontal bar plot with standard deviation error bars.
 
     Parameters
@@ -117,13 +135,20 @@ def plot_horizontal_barplot(
     ylabel : str
         Y-axis label.
     figsize : tuple[int, int]
-        Figure size (width, height).
+        Figure size (width, height), used only when ``ax`` is None.
+    ax : Axes or None
+        Axes to draw on. If None, a new figure is created.
+
+    Returns
+    -------
+    Axes
+        The Axes with the plot.
     """
-    fig, ax = plt.subplots(figsize=figsize)
+    if ax is None:
+        _, ax = plt.subplots(figsize=figsize, layout="tight")
     order = data.groupby(y)[x].mean().sort_values(ascending=True).index
     sns.barplot(data=data, x=x, y=y, order=order, ax=ax, errorbar="sd")
     ax.set_title(title)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
-    plt.tight_layout()
-    plt.show()
+    return ax

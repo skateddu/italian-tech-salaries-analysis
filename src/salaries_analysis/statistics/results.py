@@ -18,18 +18,20 @@ class TTestResult:
     cohens_d: float
     is_significant: bool
 
+    def __str__(self) -> str:
+        return "\n".join(
+            [
+                f"Test t - {self.label_group1} vs {self.label_group2}",
+                f"Media {self.label_group1}: €{self.mean_group1:.2f} | "
+                f"Media {self.label_group2}: €{self.mean_group2:.2f}",
+                f"t-statistic: {self.t_statistic:.2f}, P-value: {self.p_value:.2e}",
+                f"Effect size (Cohen's d): {self.cohens_d:.2f}",
+            ]
+        )
+
     def print_report(self) -> None:
         """Print a formatted summary of the t-test."""
-
-        means = (
-            f"Media {self.label_group1}: €{self.mean_group1:.2f} | "
-            f"Media {self.label_group2}: €{self.mean_group2:.2f}"
-        )
-        template = f"""Test t - {self.label_group1} vs {self.label_group2}
-        {means}
-        t-statistic: {self.t_statistic:.2f}, P-value: {self.p_value:.2e}
-        Effect size (Cohen's d): {self.cohens_d:.2f}"""
-        print(template)
+        print(self)
 
 
 @dataclass
@@ -43,8 +45,7 @@ class AnovaResult:
     is_non_parametric: bool = False
     is_welch: bool = False
 
-    def print_report(self) -> None:
-        """Print a formatted summary of the ANOVA / Welch / Kruskal-Wallis test."""
+    def __str__(self) -> str:
         if self.is_non_parametric:
             test_name = "Kruskal-Wallis"
         elif self.is_welch:
@@ -53,11 +54,18 @@ class AnovaResult:
             test_name = "ANOVA"
         stat_name = "H-statistic" if self.is_non_parametric else "F-statistic"
 
-        template = f"""{test_name} - {self.label}
-        {stat_name}: {self.statistic:.2f}
-        P-value: {self.p_value:.2e}
-        Differenze significative (α=0.05): {self.is_significant}"""
-        print(template)
+        return "\n".join(
+            [
+                f"{test_name} - {self.label}",
+                f"{stat_name}: {self.statistic:.2f}",
+                f"P-value: {self.p_value:.2e}",
+                f"Differenze significative (α=0.05): {self.is_significant}",
+            ]
+        )
+
+    def print_report(self) -> None:
+        """Print a formatted summary of the ANOVA / Welch / Kruskal-Wallis test."""
+        print(self)
 
 
 @dataclass
@@ -70,13 +78,18 @@ class Chi2Result:
     dof: int
     is_significant: bool
 
+    def __str__(self) -> str:
+        return "\n".join(
+            [
+                f"Chi² - {self.label}",
+                f"Chi² = {self.chi2:.2f}, P-value = {self.p_value:.2e}, df = {self.dof}",
+                f"Associazione significativa: {self.is_significant}",
+            ]
+        )
+
     def print_report(self) -> None:
         """Print a formatted summary of the chi-square test."""
-
-        template = f"""Chi² - {self.label}
-        Chi² = {self.chi2:.2f}, P-value = {self.p_value:.2e}, df = {self.dof}
-        Associazione significativa: {self.is_significant}"""
-        print(template)
+        print(self)
 
 
 @dataclass
@@ -90,17 +103,22 @@ class AssumptionResult:
     is_homoscedastic: bool = False
     recommendation: str = ""
 
-    def print_report(self) -> None:
-        """Print a formatted summary of assumption checks."""
-        print(f"Verifica assunzioni - {self.label}")
-        print("Normalità (Shapiro-Wilk, α=0.05):")
+    def __str__(self) -> str:
+        lines = [f"Verifica assunzioni - {self.label}", "Normalità (Shapiro-Wilk, α=0.05):"]
         for test in self.normality_tests:
             status = "normale" if test["is_normal"] else "non normale"
-            print(
+            lines.append(
                 f"  {test['group']} (n={test['n']}): "
                 f"W={test['statistic']:.4f}, p={test['p_value']:.2e} - {status}"
             )
         status = "omogenee" if self.is_homoscedastic else "non omogenee"
-        print("Omoschedasticità (Levene, α=0.05):")
-        print(f"  F={self.levene_statistic:.2f}, p={self.levene_p_value:.2e} - varianze {status}")
-        print(f"Raccomandazione: {self.recommendation}")
+        lines += [
+            "Omoschedasticità (Levene, α=0.05):",
+            f"  F={self.levene_statistic:.2f}, p={self.levene_p_value:.2e} - varianze {status}",
+            f"Raccomandazione: {self.recommendation}",
+        ]
+        return "\n".join(lines)
+
+    def print_report(self) -> None:
+        """Print a formatted summary of assumption checks."""
+        print(self)
