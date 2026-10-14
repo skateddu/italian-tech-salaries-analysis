@@ -10,7 +10,6 @@ authors = [
 ]
 keywords = ["data-analysis", "salaries", "statistics", "italy", "tech"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
