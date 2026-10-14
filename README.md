@@ -24,10 +24,11 @@ L'analisi segue uno schema consolidato per ogni sezione: *cosa si analizza*, *pe
 
 ## Risultati Principali
 
-- **Esperienza** e il fattore dominante: un senior guadagna oltre il 50% in piu di un junior (Cohen's d = 0.96); la regressione stima +3.3% per ogni anno aggiuntivo
+- **Esperienza** e il fattore dominante: un senior guadagna oltre il 50% in piu di un junior (Cohen's d = 0.96). La regressione stima +3.2% per ogni anno in media, con rendimenti decrescenti: circa +7% a inizio carriera, quasi zero intorno ai 18 anni
+- **Ruolo**: secondo fattore per importanza. Aggiungerlo alla regressione porta l'R² da 0.25 a 0.37
 - **Divario Nord-Sud** confermato: gap di ~6.6k tra Nord e Sud. In euro cresce con la seniority, ma in percentuale resta stabile (~17-19% a ogni livello). Il Centro si posiziona a meta strada
-- **Gender pay gap**: 11.5% grezzo, circa 7.9% a parita di esperienza, regione, dimensione aziendale e work mode. Persiste a ogni livello di esperienza anche dopo la correzione per test multipli. A questo si aggiunge il fenomeno del *leaky pipeline* (quota femminile dal 16.5% tra i junior al 9.9% tra i senior)
-- **Regressione multipla su log(salario)**: oltre all'esperienza, le penalita maggiori sono associate al lavoro onsite (-13.5% rispetto all'hybrid) e al Sud (-10% rispetto al Centro); gender e dimensione aziendale valgono circa l'8%. Remote e hybrid sono equivalenti
+- **Gender pay gap**: 11.5% grezzo, circa 7.4% a parita di esperienza, ruolo, regione, dimensione aziendale e work mode. Persiste a ogni livello di esperienza anche dopo la correzione per test multipli. La quota femminile scende dal 16.5% tra i junior al 9.9% tra i senior, un pattern coerente con un *leaky pipeline* o con un effetto coorte
+- **Importanza dei fattori** (eta² parziale): esperienza > ruolo > work mode > regione > gender > dimensione azienda. A parita di ruolo, il lavoro onsite e associato a un -13% rispetto all'hybrid e il Sud a un -8% rispetto al Centro; il remote a un +2.8%
 
 ## Metodi Statistici Utilizzati
 
@@ -35,11 +36,12 @@ L'analisi segue uno schema consolidato per ogni sezione: *cosa si analizza*, *pe
 |------|-------|
 | **ANOVA / Welch ANOVA / Kruskal-Wallis** | Confronto tra 3+ gruppi (parametrico / varianze diverse / non parametrico) |
 | **Welch t-test** | Confronto tra 2 gruppi senza assumere varianze uguali |
-| **Tukey HSD** | Post-hoc per identificare quali coppie differiscono |
+| **Games-Howell** | Post-hoc per identificare quali coppie differiscono, senza assumere varianze uguali |
 | **Correzione di Holm** | Controllo dei falsi positivi quando si eseguono piu test sulla stessa domanda |
 | **Cohen's d** | Dimensione dell'effetto (rilevanza pratica) |
+| **Eta² parziale** | Importanza relativa dei fattori di un modello, sulla stessa scala |
 | **Chi Quadro** | Indipendenza tra variabili categoriche |
-| **Regressione OLS su log(salario)** | Effetto netto percentuale di ciascun fattore, controllando per gli altri |
+| **Regressione OLS su log(salario)** | Effetto netto percentuale di ciascun fattore, controllando per gli altri (errori standard robusti HC3) |
 | **Shapiro-Wilk / Levene** | Verifica assunzioni ANOVA (normalita, omoschedasticita) |
 
 ## Riproducibilita
@@ -59,9 +61,9 @@ italian-tech-salaries-analysis/
 │   │   ├── features.py              # Feature engineering
 │   │   └── geo_mapper.py            # Mappatura province -> regioni -> macro-regioni
 │   ├── statistics/
-│   │   ├── effect_size.py           # Cohen's d
+│   │   ├── effect_size.py           # Cohen's d, eta² parziale
 │   │   ├── results.py               # Dataclass per risultati (ANOVA, Chi2, TTest, AssumptionResult)
-│   │   └── tests.py                 # Welch t-test, (Welch) ANOVA, Kruskal-Wallis, Chi2, assunzioni, Holm
+│   │   └── tests.py                 # Welch t-test, (Welch) ANOVA, Kruskal-Wallis, Games-Howell, Chi2, Holm
 │   └── visualization/
 │       └── plots.py                 # Barplot, boxplot, heatmap
 ├── tests/
