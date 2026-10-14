@@ -36,6 +36,7 @@ PROVINCE_MAPPER = {
     "Lodi": "Lombardia",
     "Sondrio": "Lombardia",
     "Pavia": "Lombardia",
+    "Lecco": "Lombardia",
     # Piemonte
     "Torino": "Piemonte",
     "Cuneo": "Piemonte",
@@ -57,6 +58,7 @@ PROVINCE_MAPPER = {
     "Belluno": "Veneto",
     "Venezia": "Veneto",
     "Rovigo": "Veneto",
+    "Vicenza": "Veneto",
     # Friuli-Venezia Giulia
     "Udine": "Friuli-Venezia Giulia",
     "Pordenone": "Friuli-Venezia Giulia",
@@ -75,6 +77,8 @@ PROVINCE_MAPPER = {
     "Parma": "Emilia-Romagna",
     "Rimini": "Emilia-Romagna",
     "Ferrara": "Emilia-Romagna",
+    "Reggio Emilia": "Emilia-Romagna",
+    "Piacenza": "Emilia-Romagna",
     # Toscana
     "Firenze": "Toscana",
     "Lucca": "Toscana",
@@ -84,6 +88,8 @@ PROVINCE_MAPPER = {
     "Arezzo": "Toscana",
     "Grosseto": "Toscana",
     "Siena": "Toscana",
+    "Prato": "Toscana",
+    "Pistoia": "Toscana",
     # Umbria
     "Perugia": "Umbria",
     "Terni": "Umbria",
@@ -98,6 +104,7 @@ PROVINCE_MAPPER = {
     "Frosinone": "Lazio",
     "Rieti": "Lazio",
     "Latina": "Lazio",
+    "Viterbo": "Lazio",
     # Abruzzo
     "L'Aquila": "Abruzzo",
     "Pescara": "Abruzzo",
@@ -127,6 +134,7 @@ PROVINCE_MAPPER = {
     "Catanzaro": "Calabria",
     "Crotone": "Calabria",
     "Reggio Calabria": "Calabria",
+    "Vibo Valentia": "Calabria",
     # Sicilia
     "Catania": "Sicilia",
     "Palermo": "Sicilia",
@@ -136,9 +144,11 @@ PROVINCE_MAPPER = {
     "Caltanissetta": "Sicilia",
     "Siracusa": "Sicilia",
     "Agrigento": "Sicilia",
+    "Enna": "Sicilia",
     # Sardegna
     "Sassari": "Sardegna",
     "Oristano": "Sardegna",
     "Cagliari": "Sardegna",
     "Nuoro": "Sardegna",
+    "Sud Sardegna": "Sardegna",
 }
