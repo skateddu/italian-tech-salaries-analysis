@@ -1,5 +1,6 @@
 """Wrapper functions for common statistical tests."""
 
+import numpy as np
 import pandas as pd
 from scipy import stats
 import statsmodels.api as sm
@@ -275,3 +276,56 @@ def adjust_pvalues(
         },
         index=pd.Index(list(p_values.keys()), name="comparison"),
     )
+
+
+def games_howell(groups: list[pd.Series], labels: list[str], alpha: float = 0.05) -> pd.DataFrame:
+    """Run the Games-Howell post-hoc test for all pairs of groups.
+
+    Unlike Tukey HSD, Games-Howell does not assume equal variances or equal
+    group sizes, so it is the natural post-hoc test after a Welch ANOVA.
+
+    Parameters
+    ----------
+    groups : list[pd.Series]
+        List of observation series, one per group.
+    labels : list[str]
+        Display labels for each group.
+    alpha : float
+        Family-wise significance level used for the confidence intervals.
+
+    Returns
+    -------
+    pd.DataFrame
+        One row per pair with mean difference, standard error, Welch degrees
+        of freedom, p-value and confidence interval of the difference.
+    """
+    k = len(groups)
+    means = [group.mean() for group in groups]
+    var_n = [group.var(ddof=1) / len(group) for group in groups]
+    sizes = [len(group) for group in groups]
+
+    rows = []
+    for i in range(k):
+        for j in range(i + 1, k):
+            diff = means[i] - means[j]
+            se = np.sqrt((var_n[i] + var_n[j]) / 2)
+            dof = (var_n[i] + var_n[j]) ** 2 / (
+                var_n[i] ** 2 / (sizes[i] - 1) + var_n[j] ** 2 / (sizes[j] - 1)
+            )
+            q = abs(diff) / se
+            q_crit = stats.studentized_range.ppf(1 - alpha, k, dof)
+            rows.append(
+                {
+                    "group1": labels[i],
+                    "group2": labels[j],
+                    "mean_diff": diff,
+                    "se": se * np.sqrt(2),
+                    "dof": dof,
+                    "p_value": stats.studentized_range.sf(q, k, dof),
+                    "ci_lower": diff - q_crit * se,
+                    "ci_upper": diff + q_crit * se,
+                }
+            )
+    result = pd.DataFrame(rows)
+    result["is_significant"] = result["p_value"] < alpha
+    return result

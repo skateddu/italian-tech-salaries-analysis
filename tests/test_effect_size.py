@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from salaries_analysis.statistics.effect_size import cohens_d
+from salaries_analysis.statistics.effect_size import cohens_d, partial_eta_squared
 
 
 class TestCohensD:
@@ -46,3 +46,18 @@ class TestCohensD:
         expected = (group1.mean() - group2.mean()) / pooled_std
 
         assert abs(cohens_d(group1, group2) - expected) < 1e-10
+
+
+class TestPartialEtaSquared:
+    """Tests for partial_eta_squared."""
+
+    def test_known_values(self) -> None:
+        table = pd.DataFrame({"sum_sq": [30.0, 10.0, 90.0]}, index=["A", "B", "Residual"])
+        result = partial_eta_squared(table)
+        assert list(result.index) == ["A", "B"]
+        assert np.allclose(result.values, [30 / 120, 10 / 100])
+
+    def test_values_between_zero_and_one(self) -> None:
+        table = pd.DataFrame({"sum_sq": [5.0, 0.0, 1.0]}, index=["X", "Y", "Residual"])
+        result = partial_eta_squared(table)
+        assert ((result >= 0) & (result <= 1)).all()
