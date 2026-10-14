@@ -1,7 +1,6 @@
 """Tests for feature engineering transformations."""
 
 import pandas as pd
-import pytest
 
 from src.data.features import (
     EXPERIENCE_JUNIOR_THRESHOLD,

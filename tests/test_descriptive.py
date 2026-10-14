@@ -37,36 +37,44 @@ class TestDescribeGroups:
     """Tests for describe_groups."""
 
     def test_returns_dataframe(self) -> None:
-        df = pd.DataFrame({
-            "group": ["A", "A", "B", "B"],
-            "value": [10, 20, 30, 40],
-        })
+        df = pd.DataFrame(
+            {
+                "group": ["A", "A", "B", "B"],
+                "value": [10, 20, 30, 40],
+            }
+        )
         result = describe_groups(df, group_column="group", value_column="value")
         assert isinstance(result, pd.DataFrame)
 
     def test_columns_present(self) -> None:
-        df = pd.DataFrame({
-            "group": ["A", "A", "B", "B"],
-            "value": [10, 20, 30, 40],
-        })
+        df = pd.DataFrame(
+            {
+                "group": ["A", "A", "B", "B"],
+                "value": [10, 20, 30, 40],
+            }
+        )
         result = describe_groups(df, group_column="group", value_column="value")
         expected = {"n", "mean", "std", "min", "median", "max"}
         assert expected == set(result.columns)
 
     def test_group_count(self) -> None:
-        df = pd.DataFrame({
-            "group": ["A", "A", "A", "B", "B"],
-            "value": [10, 20, 30, 40, 50],
-        })
+        df = pd.DataFrame(
+            {
+                "group": ["A", "A", "A", "B", "B"],
+                "value": [10, 20, 30, 40, 50],
+            }
+        )
         result = describe_groups(df, group_column="group", value_column="value")
         assert result.loc["A", "n"] == 3
         assert result.loc["B", "n"] == 2
 
     def test_group_mean_correct(self) -> None:
-        df = pd.DataFrame({
-            "group": ["A", "A", "B", "B"],
-            "value": [10.0, 30.0, 100.0, 200.0],
-        })
+        df = pd.DataFrame(
+            {
+                "group": ["A", "A", "B", "B"],
+                "value": [10.0, 30.0, 100.0, 200.0],
+            }
+        )
         result = describe_groups(df, group_column="group", value_column="value")
         assert result.loc["A", "mean"] == 20.0
         assert result.loc["B", "mean"] == 150.0

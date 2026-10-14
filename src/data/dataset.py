@@ -1,7 +1,7 @@
 """Loading utilities for the Italian tech salaries dataset."""
 
-import pandas as pd
 from datasets import load_dataset
+import pandas as pd
 
 
 def load_salaries(path: str) -> pd.DataFrame:

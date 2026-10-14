@@ -26,7 +26,7 @@ def describe_complete(df: pd.DataFrame, column: str) -> pd.DataFrame:
 def describe_groups(df: pd.DataFrame, group_column: str, value_column: str) -> pd.DataFrame:
     """
     Compute descriptive statistics for groups in a DataFrame.
-    
+
     Parameters
     ----------
     df : pd.DataFrame
@@ -41,11 +41,15 @@ def describe_groups(df: pd.DataFrame, group_column: str, value_column: str) -> p
     pd.DataFrame
         DataFrame with descriptive statistics for each group.
     """
-    return df.groupby(by=group_column).agg(
-        n=(value_column, "count"),
-        mean=(value_column, "mean"),
-        std=(value_column, "std"),
-        min=(value_column, "min"),
-        median=(value_column, "median"),
-        max=(value_column, "max"),
-    ).round(decimals=2)
+    return (
+        df.groupby(by=group_column)
+        .agg(
+            n=(value_column, "count"),
+            mean=(value_column, "mean"),
+            std=(value_column, "std"),
+            min=(value_column, "min"),
+            median=(value_column, "median"),
+            max=(value_column, "max"),
+        )
+        .round(decimals=2)
+    )
