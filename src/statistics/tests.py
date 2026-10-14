@@ -1,8 +1,8 @@
 """Wrapper functions for common statistical tests."""
 
 import pandas as pd
-import statsmodels.api as sm
 from scipy import stats
+import statsmodels.api as sm
 from statsmodels.formula.api import ols
 
 from src.statistics.effect_size import cohens_d
@@ -152,18 +152,18 @@ def check_anova_assumptions(
     normality_tests = []
     for group, group_label in zip(groups, labels):
         sample = (
-            group.sample(n=max_shapiro_n, random_state=42)
-            if len(group) > max_shapiro_n
-            else group
+            group.sample(n=max_shapiro_n, random_state=42) if len(group) > max_shapiro_n else group
         )
         statistic, p_value = stats.shapiro(sample)
-        normality_tests.append({
-            "group": group_label,
-            "statistic": statistic,
-            "p_value": p_value,
-            "is_normal": p_value >= alpha,
-            "n": len(group),
-        })
+        normality_tests.append(
+            {
+                "group": group_label,
+                "statistic": statistic,
+                "p_value": p_value,
+                "is_normal": p_value >= alpha,
+                "n": len(group),
+            }
+        )
 
     levene_statistic, levene_p_value = stats.levene(*groups)
     is_homoscedastic = levene_p_value >= alpha

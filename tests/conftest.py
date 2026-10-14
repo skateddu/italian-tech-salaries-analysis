@@ -8,15 +8,21 @@ import pytest
 @pytest.fixture()
 def salary_df() -> pd.DataFrame:
     """Minimal DataFrame mimicking the raw salary dataset."""
-    return pd.DataFrame({
-        "province": ["Milano", "Roma", "Napoli", "Torino", "Firenze", "Bari"],
-        "monthsOfExperience": [12, 36, 60, 84, 6, 120],
-        "salary": [30_000, 35_000, 40_000, 50_000, 28_000, 55_000],
-        "submittedAt": [
-            "2024-01-15", "2024-02-20", "2024-03-10",
-            "2024-04-05", "2024-05-12", "2024-06-01",
-        ],
-    })
+    return pd.DataFrame(
+        {
+            "province": ["Milano", "Roma", "Napoli", "Torino", "Firenze", "Bari"],
+            "monthsOfExperience": [12, 36, 60, 84, 6, 120],
+            "salary": [30_000, 35_000, 40_000, 50_000, 28_000, 55_000],
+            "submittedAt": [
+                "2024-01-15",
+                "2024-02-20",
+                "2024-03-10",
+                "2024-04-05",
+                "2024-05-12",
+                "2024-06-01",
+            ],
+        }
+    )
 
 
 @pytest.fixture()

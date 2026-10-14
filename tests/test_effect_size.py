@@ -42,9 +42,7 @@ class TestCohensD:
         group2 = pd.Series([100.0, 200.0, 300.0, 400.0])
 
         n1, n2 = len(group1), len(group2)
-        pooled_std = np.sqrt(
-            ((n1 - 1) * group1.var() + (n2 - 1) * group2.var()) / (n1 + n2 - 2)
-        )
+        pooled_std = np.sqrt(((n1 - 1) * group1.var() + (n2 - 1) * group2.var()) / (n1 + n2 - 2))
         expected = (group1.mean() - group2.mean()) / pooled_std
 
         assert abs(cohens_d(group1, group2) - expected) < 1e-10

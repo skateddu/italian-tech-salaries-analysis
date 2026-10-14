@@ -21,8 +21,12 @@ class TTestResult:
     def print_report(self) -> None:
         """Print a formatted summary of the t-test."""
 
-        template=f"""Test t - {self.label_group1} vs {self.label_group2}
-        Media ${self.label_group1}: €{self.mean_group1:.2f} | Media {self.label_group2}: €{self.mean_group2:.2f}
+        means = (
+            f"Media {self.label_group1}: €{self.mean_group1:.2f} | "
+            f"Media {self.label_group2}: €{self.mean_group2:.2f}"
+        )
+        template = f"""Test t - {self.label_group1} vs {self.label_group2}
+        {means}
         t-statistic: {self.t_statistic:.2f}, P-value: {self.p_value:.2e}
         Effect size (Cohen's d): {self.cohens_d:.2f}"""
         print(template)
@@ -86,7 +90,10 @@ class AssumptionResult:
         print("Normalità (Shapiro-Wilk, α=0.05):")
         for test in self.normality_tests:
             status = "normale" if test["is_normal"] else "non normale"
-            print(f"  {test['group']} (n={test['n']}): W={test['statistic']:.4f}, p={test['p_value']:.2e} - {status}")
+            print(
+                f"  {test['group']} (n={test['n']}): "
+                f"W={test['statistic']:.4f}, p={test['p_value']:.2e} - {status}"
+            )
         status = "omogenee" if self.is_homoscedastic else "non omogenee"
         print("Omoschedasticità (Levene, α=0.05):")
         print(f"  F={self.levene_statistic:.2f}, p={self.levene_p_value:.2e} - varianze {status}")

@@ -8,11 +8,16 @@ class TestTTestResult:
 
     def test_print_report_runs(self, capsys: object) -> None:
         result = TTestResult(
-            label_group1="A", label_group2="B",
-            mean_group1=50.0, mean_group2=40.0,
-            n_group1=100, n_group2=100,
-            t_statistic=3.5, p_value=0.001,
-            cohens_d=0.7, is_significant=True,
+            label_group1="A",
+            label_group2="B",
+            mean_group1=50.0,
+            mean_group2=40.0,
+            n_group1=100,
+            n_group2=100,
+            t_statistic=3.5,
+            p_value=0.001,
+            cohens_d=0.7,
+            is_significant=True,
         )
         result.print_report()
         captured = capsys.readouterr()
@@ -25,8 +30,11 @@ class TestAnovaResult:
 
     def test_print_report_parametric(self, capsys: object) -> None:
         result = AnovaResult(
-            label="Test", statistic=15.0, p_value=0.001,
-            is_significant=True, is_non_parametric=False,
+            label="Test",
+            statistic=15.0,
+            p_value=0.001,
+            is_significant=True,
+            is_non_parametric=False,
         )
         result.print_report()
         captured = capsys.readouterr()
@@ -35,8 +43,11 @@ class TestAnovaResult:
 
     def test_print_report_non_parametric(self, capsys: object) -> None:
         result = AnovaResult(
-            label="Test", statistic=15.0, p_value=0.001,
-            is_significant=True, is_non_parametric=True,
+            label="Test",
+            statistic=15.0,
+            p_value=0.001,
+            is_significant=True,
+            is_non_parametric=True,
         )
         result.print_report()
         captured = capsys.readouterr()
@@ -49,7 +60,11 @@ class TestChi2Result:
 
     def test_print_report_runs(self, capsys: object) -> None:
         result = Chi2Result(
-            label="X vs Y", chi2=12.5, p_value=0.002, dof=3, is_significant=True,
+            label="X vs Y",
+            chi2=12.5,
+            p_value=0.002,
+            dof=3,
+            is_significant=True,
         )
         result.print_report()
         captured = capsys.readouterr()

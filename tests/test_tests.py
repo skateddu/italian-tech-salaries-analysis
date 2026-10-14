@@ -111,7 +111,9 @@ class TestCheckAnovaAssumptions:
 
     def test_returns_assumption_result(self, three_groups: list[pd.Series]) -> None:
         result = check_anova_assumptions(
-            groups=three_groups, labels=["A", "B", "C"], label="Test",
+            groups=three_groups,
+            labels=["A", "B", "C"],
+            label="Test",
         )
         assert isinstance(result, AssumptionResult)
 
@@ -119,7 +121,9 @@ class TestCheckAnovaAssumptions:
         rng = np.random.default_rng(seed=42)
         groups = [pd.Series(rng.normal(loc=i, scale=5, size=30)) for i in range(3)]
         result = check_anova_assumptions(
-            groups=groups, labels=["A", "B", "C"], label="Normal",
+            groups=groups,
+            labels=["A", "B", "C"],
+            label="Normal",
         )
         if result.normality_tests[0]["is_normal"] and result.is_homoscedastic:
             assert "ANOVA parametrica" in result.recommendation
@@ -128,7 +132,9 @@ class TestCheckAnovaAssumptions:
         rng = np.random.default_rng(seed=42)
         groups = [pd.Series(rng.exponential(scale=10, size=15)) for _ in range(3)]
         result = check_anova_assumptions(
-            groups=groups, labels=["A", "B", "C"], label="Skewed",
+            groups=groups,
+            labels=["A", "B", "C"],
+            label="Skewed",
         )
         is_all_normal = all(t["is_normal"] for t in result.normality_tests)
         is_all_large = all(t["n"] >= 30 for t in result.normality_tests)
@@ -139,7 +145,9 @@ class TestCheckAnovaAssumptions:
         rng = np.random.default_rng(seed=42)
         groups = [pd.Series(rng.exponential(scale=10, size=500)) for _ in range(3)]
         result = check_anova_assumptions(
-            groups=groups, labels=["A", "B", "C"], label="Large",
+            groups=groups,
+            labels=["A", "B", "C"],
+            label="Large",
         )
         is_all_normal = all(t["is_normal"] for t in result.normality_tests)
         is_all_large = all(t["n"] >= 30 for t in result.normality_tests)
@@ -150,7 +158,9 @@ class TestCheckAnovaAssumptions:
         rng = np.random.default_rng(seed=42)
         groups = [pd.Series(rng.normal(size=50)) for _ in range(4)]
         result = check_anova_assumptions(
-            groups=groups, labels=["A", "B", "C", "D"], label="Four",
+            groups=groups,
+            labels=["A", "B", "C", "D"],
+            label="Four",
         )
         assert len(result.normality_tests) == 4
 
@@ -172,11 +182,13 @@ class TestFactorialAnova:
 
     def test_returns_dataframe(self) -> None:
         rng = np.random.default_rng(seed=42)
-        df = pd.DataFrame({
-            "salary": rng.normal(loc=40000, scale=10000, size=120),
-            "experience": (["junior"] * 40 + ["middle"] * 40 + ["senior"] * 40),
-            "region": (["Nord", "Sud"] * 60),
-        })
+        df = pd.DataFrame(
+            {
+                "salary": rng.normal(loc=40000, scale=10000, size=120),
+                "experience": (["junior"] * 40 + ["middle"] * 40 + ["senior"] * 40),
+                "region": (["Nord", "Sud"] * 60),
+            }
+        )
         result = factorial_anova(df, target="salary", factors=["experience", "region"])
         assert isinstance(result, pd.DataFrame)
         assert "PR(>F)" in result.columns
@@ -185,14 +197,20 @@ class TestFactorialAnova:
         rng = np.random.default_rng(seed=42)
         n = 60
         experience = ["junior"] * n + ["senior"] * n
-        salary = np.concatenate([
-            rng.normal(loc=30000, scale=5000, size=n),
-            rng.normal(loc=50000, scale=5000, size=n),
-        ])
-        region = (["Nord", "Sud"] * n)
-        df = pd.DataFrame({
-            "salary": salary, "experience": experience, "region": region,
-        })
+        salary = np.concatenate(
+            [
+                rng.normal(loc=30000, scale=5000, size=n),
+                rng.normal(loc=50000, scale=5000, size=n),
+            ]
+        )
+        region = ["Nord", "Sud"] * n
+        df = pd.DataFrame(
+            {
+                "salary": salary,
+                "experience": experience,
+                "region": region,
+            }
+        )
         result = factorial_anova(df, target="salary", factors=["experience", "region"])
         experience_p = result.loc["C(experience)", "PR(>F)"]
         assert experience_p < 0.05
